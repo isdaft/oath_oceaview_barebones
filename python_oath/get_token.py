@@ -1,8 +1,11 @@
-import requests
-import json
-import os
+from dotenv import load_dotenv
 
 def get_token():
+    import requests
+    import json
+    import os
+    # Load environment variables from creds.env
+    load_dotenv('creds.env')
     session = requests.Session()
     data = {
         "username": os.getenv('USERNAME'),

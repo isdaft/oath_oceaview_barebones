@@ -1,7 +1,10 @@
+from numpy import printoptions
+from excel_gen import excel_gen, print_to_json
 from get_token import get_token
-from fetch_all_data import fetch_all_data
-from config import URL, CONTEXT
-
+from fetch_all_data import fetch_all_data, fetch_historical_data
+from config import URL, CONTEXT, CONTEXT_SENSOR_HISTORY
+from processing.process_data import process_data
+from excel_gen import excel_gen_files
 import requests
 import json
 from datetime import datetime
@@ -11,9 +14,11 @@ import pandas as pd
 
 
 
-def main():
+
+
+def main2tr():
     
-    resource = fetch_all_data(url, token, context)
+   
     # Prepare an empty list to store the rows
     rows = []
     incorrect_equipments = []
@@ -158,18 +163,26 @@ def main():
     #     json.dump(cytomat_incubators, f, indent=4)
 
 
-def main():
+def main1():
     
     # generate token
+    print("Main: Generating Token")
     token = get_token()
     
     # get the data from the api
+    print("Main: Fetch All Data From API")
     data = fetch_all_data(URL, token, CONTEXT)
+   
     
     # process the data
+    print("Main: Process Payload")
+    payload = process_data(data, token)
     
-        
-        
+    # generate excel file with processed data
+    print("Main: Generate Excel File from Payload")
+    #excel_gen(payload)  
+    #
+    print_to_json(payload)  
 
 
 
