@@ -22,9 +22,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="api_request.py" />
+    <Compile Include="comm_loss.py" />
     <Compile Include="config.py" />
     <Compile Include="excel_gen.py" />
     <Compile Include="fetch_all_data.py" />
+    <Compile Include="fetch_audit.py" />
     <Compile Include="filter_nulls_gaps.py" />
     <Compile Include="get_token.py" />
     <Compile Include="processing\process_data.py" />

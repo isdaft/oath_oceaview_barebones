@@ -1,4 +1,6 @@
 
+
+
 def excel_gen(payload):
     import pandas as pd
 
@@ -50,13 +52,58 @@ def excel_gen_files(comparedFiles):
 def print_to_json(payload):
     import json
     
-    data = json.loads(payload)
     
-    filtered_data_sensW_Hist = [item for item in data['sensors'] if item['HistoricalData']]
+    
+    #filtered_data_sensW_Hist = [item for item in data['sensors'] if item['HistoricalData']]
+    filtered_data_sensW_Hist = [item for item in payload if 'HistoricalData' in item['sensors']]
     
     filtered_json_sensW_Hist = json.dumps(filtered_data_sensW_Hist, indent=4)
     
-    with open('C:\\Users\\ashbyb\\Downloads\\py_hist_null2.json', 'w') as json_file:
-        json.dump(payload, json_file, indent=4)
+    save_location = 'C:\\Users\\ashbyb\\Downloads\\py_historical_data_608_2.json'
+    
+    with open(save_location, 'w') as json_file:
+        json.dump(filtered_json_sensW_Hist, json_file, indent=4)
+    
+    return save_location
+
         
-        
+def generate_excel_from_limits(data, file_path):
+    import pandas as pd
+    import json
+
+    # Flatten the data into a list of dictionaries
+    rows = []
+    #data = json.loads(data)
+    for equipment in data:
+        for sensor in equipment['sensors']:
+            for level, value in sensor['IncorrectLimits']:
+                # Prepare a row as a dictionary
+                row = {
+                    'Equipment Name': equipment['Name'],
+                    'Equipment Id': equipment['Id'],
+                    'Equipment Inventory Code': equipment['Inventory Code'],
+                    'Equipment Type': equipment['Type'],
+                    'Equipment Topology Name': equipment['Topology Name'],
+                    'Sensor Id': sensor['Id'],
+                    'Sensor ProbeSerialNumber': sensor['ProbeSerialNumber'],
+                    'Sensor Type': sensor['PhysicalParameter'],
+                    'Incorrect Limit Level': level,
+                    'Incorrect Limit Value': value,
+                }
+                # Append the row to the list
+                rows.append(row)
+
+    # Convert the list of dictionaries to a DataFrame
+    df = pd.DataFrame(rows)
+
+    # Write the DataFrame to an Excel file
+    df.to_excel(file_path, index=False)       
+
+def excel_gen_equipment_names(rows):
+    import pandas as pd
+
+    # Create a DataFrame from the list of rows
+    df = pd.DataFrame(rows)
+
+    # Write the DataFrame to an Excel file
+    df.to_excel('C:\\Users\\ashbyb\\Downloads\\SHIP_prev_equipment_names_3.xlsx', index=False)
